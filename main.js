@@ -1,18 +1,38 @@
-var books = [
-  {
-    title: 'Harry Potter',
-    author: 'J.K. Rowling',
-    imageURL: 'https://books.google.com/books/content?id=WV8pZj_oNBwC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-    isbn: '9781921479311',
-    pageCount: 268
-  }
-];
+let books = [];
+
+document.querySelector('.search').addEventListener('click', function () {
+  let search = document.querySelector('#search-query').value;
+
+  fetchBooks(search);
+
+  document.querySelector('#search-query').value = '';
+});
+
+const fetchBooks = function (query) {
+	const url = 'https://www.googleapis.com/books/v1/volumes?q=' + query;
+	fetch(url, {
+		method: 'GET',
+		dataType: 'json',
+	})
+		.then((data) => data.json())
+		.then((data) => addBooks(data));
+};
 
 
-var renderBooks = function (book) {
+const addBooks = function (data) {
+  for(i= 0; i > books.length; i++){
+    
+  };
+};
+
+
+const renderBooks = function (book) {
   document.querySelector('.books').replaceChildren();
 
-  const template = `
+  for (let i = 0; i < books.length; i++) {
+    // create HTML and append to .books
+    let book = books[i];
+    const template = `
   <div class="book col-md-6">
     <h4>${ book.title }</h4>
     <div>Author: <strong>${ book.author }</strong></div>
@@ -21,10 +41,9 @@ var renderBooks = function (book) {
     <img src="${book.imageURL}" alt="">
   </div>`;
 
-  for (var i = 0; i < books.length; i++) {
-    // create HTML and append to .books
     document.querySelector('.books').insertAdjacentHTML('beforeend', template);
   }
 };
 
-renderBooks(books);
+renderBooks();
+
