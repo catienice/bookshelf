@@ -6,3 +6,16 @@
   margin-top: 40px;
   margin-bottom: 40px;
 }
+
+.loading {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+p {
+  font-size: x-large;
+  font-weight: bold;
+}

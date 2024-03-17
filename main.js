@@ -1,11 +1,13 @@
 let books = [];
+const loadingDiv = document.querySelector('.loading');
 
 document.querySelector('.search').addEventListener('click', function () {
   let search = document.querySelector('#search-query').value;
-
   fetchBooks(search);
 
   document.querySelector('#search-query').value = '';
+  
+  loadingDiv.classList.add('show');
 });
 
 const fetchBooks = function (query) {
@@ -15,16 +17,29 @@ const fetchBooks = function (query) {
 		dataType: 'json',
 	})
 		.then((data) => data.json())
-		.then((data) => addBooks(data));
+		.then((data) => addBooks(data))
+    .then(() => hideLoading());
 };
-
 
 const addBooks = function (data) {
-  for(i= 0; i > books.length; i++){
-    
-  };
-};
+  books = [];
 
+  for (let i = 0; i < data.items.length; i++){
+    let bookInfo = data.items[i];
+
+    let book = {
+      title: bookInfo.volumeInfo.title || null,
+      author: bookInfo.volumeInfo.authors ? bookInfo.volumeInfo.authors[0] : null,
+      pageCount: bookInfo.volumeInfo.pageCount || null,
+      isbn: bookInfo.volumeInfo.industryIdentifiers ? bookInfo.volumeInfo.industryIdentifiers[0].identifier : null,
+      imageURL: bookInfo.volumeInfo.imageLinks ? bookInfo.volumeInfo.imageLinks.thumbnail : null,
+    }
+    books.push(book);
+  }
+ 
+  renderBooks();
+  
+}
 
 const renderBooks = function (book) {
   document.querySelector('.books').replaceChildren();
@@ -43,7 +58,9 @@ const renderBooks = function (book) {
 
     document.querySelector('.books').insertAdjacentHTML('beforeend', template);
   }
+
 };
 
-renderBooks();
-
+const hideLoading = function(){
+  loadingDiv.className = 'loading';
+}
